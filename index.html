@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Join the Discord</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0e0e14;
+      --card: #16161f;
+      --border: #2a2a3a;
+      --accent: #5865F2;
+      --accent2: #7289da;
+      --text: #f0f0f0;
+      --muted: #6b6b85;
+      --green: #57F287;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 20% 20%, rgba(88,101,242,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 80%, rgba(114,137,218,0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 380px;
+    }
+
+    /* ÉCRAN TIKTOK */
+    #tiktok-screen { display: none; flex-direction: column; }
+
+    .top-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,80,80,0.08);
+      border: 1px solid rgba(255,80,80,0.2);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 11px;
+      color: #ff6b6b;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 28px;
+      width: fit-content;
+    }
+    .badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #ff5050;
+      animation: blink 1.8s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1}50%{opacity:0.2} }
+
+    .headline {
+      font-family: 'Unbounded', sans-serif;
+      font-size: clamp(26px, 8vw, 36px);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+    }
+    .headline .hl { color: var(--accent2); }
+
+    .sub {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .steps { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 18px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: up 0.45s forwards;
+    }
+    .step:nth-child(1) { animation-delay: 0.05s; }
+    .step:nth-child(2) { animation-delay: 0.18s; }
+    @keyframes up { to { opacity:1; transform:translateY(0); } }
+
+    .step-num {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent2);
+      background: rgba(114,137,218,0.1);
+      border: 1px solid rgba(114,137,218,0.25);
+      border-radius: 6px;
+      padding: 4px 8px;
+      flex-shrink: 0;
+    }
+    .step-text { font-size: 13.5px; line-height: 1.5; color: #bbb; }
+    .step-text strong { color: var(--text); font-weight: 500; }
+    .dots-visual { display: inline-flex; gap: 3px; align-items: center; vertical-align: middle; margin: 0 2px; }
+    .dots-visual span { width: 4px; height: 4px; background: var(--text); border-radius: 50%; }
+
+    .or-line {
+      display: flex; align-items: center; gap: 10px;
+      color: var(--muted); font-size: 11px; letter-spacing: 0.06em;
+      text-transform: uppercase; margin-bottom: 20px;
+    }
+    .or-line::before, .or-line::after { content:''; flex:1; height:1px; background:var(--border); }
+
+    .btn-copy {
+      display: block; width: 100%;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 500;
+      padding: 14px; border-radius: 12px;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+      text-align: center;
+    }
+    .btn-copy:hover { border-color: var(--accent2); color: var(--text); }
+
+    .copy-confirm {
+      text-align: center; font-size: 12px;
+      color: var(--green); margin-top: 10px;
+      opacity: 0; transition: opacity 0.3s;
+    }
+
+    /* ÉCRAN NORMAL */
+    #normal-screen { display: none; flex-direction: column; align-items: center; text-align: center; }
+
+    .discord-logo {
+      width: 72px; height: 72px;
+      background: var(--accent);
+      border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 28px;
+      box-shadow: 0 12px 40px rgba(88,101,242,0.35);
+      animation: popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
+    }
+    @keyframes popIn { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+
+    .normal-title {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 22px; font-weight: 900;
+      margin-bottom: 10px; letter-spacing: -0.01em;
+    }
+    .normal-sub { color: var(--muted); font-size: 14px; line-height: 1.6; margin-bottom: 36px; }
+
+    .btn-discord {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%;
+      background: var(--accent); color: #fff;
+      font-family: 'Unbounded', sans-serif;
+      font-size: 13px; font-weight: 700; letter-spacing: 0.02em;
+      padding: 16px 24px; border-radius: 14px;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+      box-shadow: 0 6px 24px rgba(88,101,242,0.3);
+    }
+    .btn-discord:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(88,101,242,0.45); background: #4752c4; }
+    .btn-discord:active { transform: translateY(0); }
+
+    .online-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(87,242,135,0.08);
+      border: 1px solid rgba(87,242,135,0.2);
+      border-radius: 100px; padding: 5px 12px;
+      font-size: 11px; color: var(--green); margin-top: 18px;
+      letter-spacing: 0.05em;
+    }
+    .online-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: blink 2s infinite; }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- VUE TIKTOK -->
+  <div id="tiktok-screen">
+    <div class="top-badge"><span class="badge-dot"></span>TikTok browser detected</div>
+    <h1 class="headline">Open this in<br/><span class="hl">your real</span><br/>browser.</h1>
+    <p class="sub">TikTok's browser blocks some links.<br/>2 seconds to join the Discord 👇</p>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">01</span>
+        <div class="step-text"><strong>Tap <span class="dots-visual"><span></span><span></span><span></span></span> at the top right</strong></div>
+      </div>
+      <div class="step">
+        <span class="step-num">02</span>
+        <div class="step-text"><strong>Select "Open in browser"</strong></div>
+      </div>
+    </div>
+    <div class="or-line">or</div>
+    <button class="btn-copy" onclick="copyLink()">📋 Copy Discord link</button>
+    <p class="copy-confirm" id="copy-msg">✅ Link copied!</p>
+  </div>
+
+  <!-- VUE NORMALE -->
+  <div id="normal-screen">
+    <div class="discord-logo">
+      <svg width="38" height="28" viewBox="0 0 71 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.44077 45.4204 0.52529C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.52529C25.5141 0.44359 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978ZM23.7259 37.3253C20.2276 37.3253 17.3451 34.1136 17.3451 30.1693C17.3451 26.225 20.1717 23.0133 23.7259 23.0133C27.308 23.0133 30.1626 26.2532 30.1066 30.1693C30.1066 34.1136 27.28 37.3253 23.7259 37.3253ZM47.3178 37.3253C43.8196 37.3253 40.9371 34.1136 40.9371 30.1693C40.9371 26.225 43.7636 23.0133 47.3178 23.0133C50.9 23.0133 53.7545 26.2532 53.6986 30.1693C53.6986 34.1136 50.9 37.3253 47.3178 37.3253Z" fill="white"/>
+      </svg>
+    </div>
+    <h2 class="normal-title">Join the server</h2>
+    <p class="normal-sub">Redirecting automatically…<br/>Or click below.</p>
+    <a href="https://discord.gg/29SnVWwdjp" class="btn-discord">Join the Discord →</a>
+    <div class="online-pill"><span class="online-dot"></span>Server active</div>
+  </div>
+
+</div>
+<script>
+  const DISCORD_URL = 'https://discord.gg/29SnVWwdjp';
+  const ua = navigator.userAgent || '';
+  const isInApp = /BytedanceWebview|musical_ly|trill_|Instagram|FBAN|FBAV/i.test(ua);
+
+  if (isInApp) {
+    document.getElementById('tiktok-screen').style.display = 'flex';
+  } else {
+    document.getElementById('normal-screen').style.display = 'flex';
+    setTimeout(() => { window.location.href = DISCORD_URL; }, 1500);
+  }
+
+  function copyLink() {
+    const msg = document.getElementById('copy-msg');
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(DISCORD_URL).then(() => {
+        msg.style.opacity = '1';
+        setTimeout(() => msg.style.opacity = '0', 2500);
+      });
+    } else {
+      const el = document.createElement('textarea');
+      el.value = DISCORD_URL;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      msg.style.opacity = '1';
+      setTimeout(() => msg.style.opacity = '0', 2500);
+    }
+  }
+</script>
+</body>
+</html>
